@@ -19,6 +19,7 @@ const int GREEN_TIME = 5000;    // 5 seconds green
 const int YELLOW_TIME = 2000;   // 2 seconds yellow
 const int RED_TIME = 5000;      // 5 seconds red
 const int DELAY = 2000; // 2 second delay 
+const int indicator=500;
 //Define the timing constant for pedestrian to cross
 
 // State definitions
@@ -122,12 +123,24 @@ void loop() {
 
       }
     case Crossing: 
-      if (currentMillis - previousMillis >= RED_TIME){ 
+          //delay is 2 seconds so we will blink for the last two seconds of this 
+
+      // current counts - 0 (prev millis)
+      int temp = previousMillis;
+      if (currentMillis - previousMillis >= GREEN_TIME){ 
         previousMillis = currentMillis;
         setLights(GREEN);
-
         digitalWrite(BUTTON, LOW);
         Serial.println("pedestrian crossing over, switching to green");
+        break;
+      }
+      // blink every half second
+      if( currentMillis - temp>= DELAY){
+        digitalWrite(PEDESTRIAN_GREEN, LOW);
+        delay(indicator);
+        digitalWrite(PEDESTRIAN_GREEN, HIGH);
+
+  
       }
       break;
     /*
@@ -173,6 +186,11 @@ void setLights(TrafficLightState newState) {
     /*
     add the case for pedestrian crossing
     */
+    
+  }
+  
+  currentState = newState;
+}
     
   }
   
